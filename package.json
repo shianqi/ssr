@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "npm run build && node index.js",
-    "build": "webpack --config ./config/webpack.config.js"
+    "build": "webpack --config ./config/webpack.config.client.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,9 @@
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
+    "@types/express": "^4.17.7",
+    "@types/webpack-dev-middleware": "^3.7.1",
+    "@types/webpack-hot-middleware": "^2.25.3",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "babel-loader": "^8.1.0",
@@ -36,17 +39,23 @@
     "eslint-plugin-standard": "^4.0.1",
     "prettier": "^2.0.5",
     "prettier-eslint": "^9.0.1",
+    "react-refresh": "^0.8.3",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-hot-middleware": "^2.25.0"
   },
   "dependencies": {
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.9.6",
     "@babel/register": "^7.9.0",
     "core-js": "^3.6.5",
+    "express": "^4.17.1",
     "koa": "^2.12.0",
     "koa-static": "^5.0.0",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-hot-loader": "^4.12.21",
+    "require-from-string": "^2.0.2"
   }
 }
