@@ -1,55 +1,54 @@
 import express from 'express'
 import webpack from 'webpack'
 import React from 'react'
-import middleware from 'webpack-dev-middleware'
+import path from 'path'
+import devMiddleware from 'webpack-dev-middleware'
 import hotMiddleware from 'webpack-hot-middleware'
 import { renderToString } from 'react-dom/server'
 
-import webpackConfig from '../config/webpack.config.client'
+import webpackClientConfig from '../config/webpack.config.client'
+import webpackServerConfig from '../config/webpack.config.server'
 
 const app = express()
-// app.use(express.static(path.resolve(__dirname, '../dist')))
+const compiler = webpack([webpackClientConfig, webpackServerConfig])
 
-const compiler = webpack(webpackConfig)
+function deleteCache(path) {
+  delete require.cache[path]
+}
 
-// function getFilename(serverStats, outputPath, chunkName) {
-//   const assetsByChunkName = serverStats.toJson().assetsByChunkName
-//   const filename = assetsByChunkName[chunkName] || ''
-//   // If source maps are generated `assetsByChunkName.main`
-//   // will be an array of filenames.
-//   return path.join(
-//     outputPath,
-//     Array.isArray(filename)
-//       ? filename.find((asset) => /\.js$/.test(asset))
-//       : filename
-//   )
-// }
+const [clientCompiler, serverCompiler] = compiler.compilers
 
-// function interopRequireDefault(obj) {
-//   return obj && obj.__esModule ? obj.default : obj
-// }
+let prevAssets = null
 
-// let ServerRenderer
+serverCompiler.hooks.afterEmit.tap('after-emit', (compilation) => {
+  const { assets } = compilation
 
-// compiler.hooks.done.tap('WebpackHotServerMiddleware', (stats) => {
-// const outputPath = compiler.outputPath
-// const outputFs = compiler.outputFileSystem
-// const filename = getFilename(stats, outputPath, 'app')
-// const buffer = outputFs.readFileSync(filename)
-// ServerRenderer = interopRequireDefault(
-//   requireFromString(buffer.toString(), filename)
-// )
-// })
+  if (prevAssets) {
+    for (const f of Object.keys(assets)) {
+      deleteCache(assets[f].existsAt)
+    }
+    for (const f of Object.keys(prevAssets)) {
+      if (!assets[f]) {
+        deleteCache(prevAssets[f].existsAt)
+      }
+    }
+  }
+  prevAssets = assets
+})
 
-app.use(middleware(compiler, { serverSideRender: true }))
 app.use(
-  hotMiddleware(compiler, {
+  devMiddleware(compiler, {
+    serverSideRender: true,
+    writeToDisk: true,
+  })
+)
+app.use(
+  hotMiddleware(clientCompiler, {
     log: console.log,
     path: '/__webpack_hmr',
     heartbeat: 10 * 1000,
   })
 )
-// app.use()
 
 function htmlTemplate({ jsx, app }) {
   return `
@@ -63,17 +62,26 @@ function htmlTemplate({ jsx, app }) {
 
 app.use((req, res) => {
   const { webpackStats } = res.locals
-  const jsonWebpackStats = webpackStats.toJson()
+  const [clientStats, serverStats] = webpackStats.stats
+  const jsonWebpackStats = clientStats.toJson()
   const { assetsByChunkName } = jsonWebpackStats
   const { app } = assetsByChunkName
 
-  const apath = require.resolve('./App')
-  delete require.cache[apath]
-  const App = require('./App').default
+  const serverJsonWebpackStats = serverStats.toJson()
+  const { assetsByChunkName: serverAssetsByChunkName } = serverJsonWebpackStats
+  const { server } = serverAssetsByChunkName
+
+  const serverPath = path.resolve(__dirname, `../dist/${server}`)
+  const App = require(serverPath).default
   const jsx = renderToString(<App />)
 
   res.writeHead(200, { 'Content-Type': 'text/html' })
-  res.end(htmlTemplate({ jsx, app: Array.isArray(app) ? app : [app] }))
+  res.end(
+    htmlTemplate({
+      jsx,
+      app: Array.isArray(app) ? app : [app],
+    })
+  )
 })
 
 app.listen(3000)
