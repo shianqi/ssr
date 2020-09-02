@@ -6,13 +6,13 @@ module.exports = {
   entry: {
     app: [
       'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
-      './src/client.jsx',
+      './src/client.tsx',
     ],
   },
   module: {
     rules: [
       {
-        test: /.jsx?$/,
+        test: /.(jsx?|tsx?)$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
       },
@@ -26,4 +26,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
   ],
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+  },
 }
