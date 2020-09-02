@@ -1,4 +1,4 @@
-import webpack from 'webpack'
+import webpack, { MultiCompiler, Compiler, Configuration } from 'webpack'
 import hotMiddleware from 'webpack-hot-middleware'
 import devMiddleware from 'webpack-dev-middleware'
 
@@ -6,23 +6,30 @@ import webpackClientConfig from '../config/webpack.config.client'
 import webpackServerConfig from '../config/webpack.config.server'
 import { renderMiddleware } from './render'
 
-function deleteCache(path) {
+function deleteCache(path: string) {
   delete require.cache[path]
 }
 
 export default class HotReloader {
-  constructor() {
-    this.prevAssets = null
-  }
+  prevAssets: any
+  compiler: MultiCompiler
+  clientCompiler: Compiler
+  serverCompiler: Compiler
 
-  start() {
-    const compiler = webpack([webpackClientConfig, webpackServerConfig])
+  constructor() {
+    const compiler = webpack([
+      webpackClientConfig as Configuration,
+      webpackServerConfig as Configuration,
+    ])
     const [clientCompiler, serverCompiler] = compiler.compilers
 
+    this.prevAssets = null
     this.compiler = compiler
     this.clientCompiler = clientCompiler
     this.serverCompiler = serverCompiler
+  }
 
+  start() {
     this.prepareBuildTools()
   }
 

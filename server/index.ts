@@ -1,8 +1,11 @@
-import express from 'express'
+import express, { Express } from 'express'
 
 import HotReloader from './hot-reloader'
 
 export default class Server {
+  app: Express
+  hotReloader: HotReloader
+
   constructor() {
     this.app = express()
     this.hotReloader = this.getHotReloader()

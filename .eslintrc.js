@@ -28,6 +28,7 @@ module.exports = {
     'react/prop-types': 0,
     '@typescript-eslint/no-unused-vars': 2,
     '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
   settings: {
     react: {
