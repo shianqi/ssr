@@ -5,6 +5,7 @@ import path from 'path'
 import devMiddleware from 'webpack-dev-middleware'
 import hotMiddleware from 'webpack-hot-middleware'
 import { renderToString } from 'react-dom/server'
+import requireFromString from 'require-from-string'
 
 import webpackClientConfig from '../config/webpack.config.client'
 import webpackServerConfig from '../config/webpack.config.server'
@@ -39,7 +40,6 @@ serverCompiler.hooks.afterEmit.tap('after-emit', (compilation) => {
 app.use(
   devMiddleware(compiler, {
     serverSideRender: true,
-    writeToDisk: true,
   })
 )
 app.use(
@@ -61,18 +61,21 @@ function htmlTemplate({ jsx, app }) {
 }
 
 app.use((req, res) => {
-  const { webpackStats } = res.locals
+  const { webpackStats, fs } = res.locals
   const [clientStats, serverStats] = webpackStats.stats
-  const jsonWebpackStats = clientStats.toJson()
-  const { assetsByChunkName } = jsonWebpackStats
+  const clientJsonWebpackStats = clientStats.toJson()
+  const { assetsByChunkName } = clientJsonWebpackStats
   const { app } = assetsByChunkName
 
   const serverJsonWebpackStats = serverStats.toJson()
-  const { assetsByChunkName: serverAssetsByChunkName } = serverJsonWebpackStats
+  const {
+    assetsByChunkName: serverAssetsByChunkName,
+    outputPath,
+  } = serverJsonWebpackStats
   const { server } = serverAssetsByChunkName
 
-  const serverPath = path.resolve(__dirname, `../dist/${server}`)
-  const App = require(serverPath).default
+  const serverPath = path.join(outputPath, server)
+  const App = requireFromString(fs.readFileSync(serverPath).toString()).default
   const jsx = renderToString(<App />)
 
   res.writeHead(200, { 'Content-Type': 'text/html' })
