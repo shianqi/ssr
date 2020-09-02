@@ -5,4 +5,4 @@ require('@babel/register')({
     '@babel/plugin-transform-runtime',
   ],
 })
-require('./src/server')
+require('./server')
