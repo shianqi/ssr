@@ -15,6 +15,17 @@ module.exports = {
         test: /.(jsx?|tsx?)$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
+        options: {
+          presets: [
+            [
+              require.resolve('@babel/preset-env'),
+              {
+                modules: false,
+              },
+            ],
+            ['react-app', { flow: false, typescript: true }],
+          ],
+        },
       },
     ],
   },
@@ -22,10 +33,7 @@ module.exports = {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].bundle.js',
   },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
-  ],
+  plugins: [new webpack.HotModuleReplacementPlugin()],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
