@@ -15,6 +15,7 @@ const config: Configuration = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
+          babelrc: false,
           presets: [
             [
               require.resolve('@babel/preset-env'),

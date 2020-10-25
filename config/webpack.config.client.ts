@@ -4,6 +4,7 @@ import LoadablePlugin from '@loadable/webpack-plugin'
 
 const config: Configuration = {
   mode: 'development',
+  devtool: 'eval-source-map',
   entry: {
     app: [
       'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
@@ -17,6 +18,7 @@ const config: Configuration = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
+          babelrc: false,
           presets: [
             [
               require.resolve('@babel/preset-env'),
@@ -44,6 +46,9 @@ const config: Configuration = {
       writeToDisk: true,
     }),
   ],
+  optimization: {
+    usedExports: true,
+  },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
