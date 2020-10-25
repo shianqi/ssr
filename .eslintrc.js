@@ -26,9 +26,12 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   rules: {
     'react/prop-types': 0,
+    'no-use-before-define': 'off',
     '@typescript-eslint/no-unused-vars': 2,
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-use-before-define': ['error'],
+    '@typescript-eslint/no-empty-interface': 'off',
   },
   settings: {
     react: {

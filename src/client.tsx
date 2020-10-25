@@ -2,6 +2,7 @@ import React, { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
+import { loadableReady } from '@loadable/component'
 
 import App from './App'
 import { getStore } from './redux'
@@ -18,4 +19,6 @@ const Client = (
   </StrictMode>
 )
 
-ReactDOM.hydrate(Client, document.getElementById('app'))
+loadableReady(() => {
+  ReactDOM.hydrate(Client, document.getElementById('app'))
+})

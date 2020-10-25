@@ -1,14 +1,13 @@
-const path = require('path')
-const webpack = require('webpack')
+import webpack, { Configuration } from 'webpack'
+import path from 'path'
 
-module.exports = {
+const config: Configuration = {
   mode: 'development',
+  devtool: 'eval-source-map',
   entry: {
-    app: [
-      'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
-      './src/client.tsx',
-    ],
+    server: ['./src/server.tsx'],
   },
+  target: 'node',
   module: {
     rules: [
       {
@@ -25,16 +24,27 @@ module.exports = {
             ],
             ['react-app', { flow: false, typescript: true }],
           ],
+          plugins: ['@loadable/babel-plugin'],
         },
       },
     ],
   },
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: '[name].bundle.js',
+    filename: '[name].bundle.server.js',
+    libraryTarget: 'commonjs2',
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+    new webpack.DefinePlugin({
+      __isBrowser__: false,
+    }),
+  ],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+      '~': path.resolve('./src'),
+    },
   },
 }
+
+export default config

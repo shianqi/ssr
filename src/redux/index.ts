@@ -8,10 +8,7 @@ let REDUX_STORE: Store | null = null
 export const getStore = (preloadedState?: {}) => {
   if (!REDUX_STORE) {
     const initialState = {}
-    //  if (typeof window === 'object') {
-    //    initialState = window.__PRELOADED_STATE__
-    //    delete window.__PRELOADED_STATE__
-    //  }
+
     REDUX_STORE = createStore(
       rootReducer,
       preloadedState || initialState,

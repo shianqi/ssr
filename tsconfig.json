@@ -1,16 +1,3 @@
-// {
-//   "compilerOptions": {
-//     "module": "esnext",
-
-//     "preserveConstEnums": true,
-//     "removeComments": false,
-//     "target": "esnext",
-
-//     "forceConsistentCasingInFileNames": true,
-//     "resolveJsonModule": true,
-//     "isolatedModules": true
-//   },
-// }
 {
   "compilerOptions": {
     "target": "es2018",
@@ -28,7 +15,10 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "~/*": ["src/*"],
+    }
   },
   "exclude": ["node_modules", "dist"],
   "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
