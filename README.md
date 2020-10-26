@@ -1,8 +1,14 @@
-# react-ssr
+# React SSR Demo
 
-### TODO
+一个 React SSR 同构渲染项目脚手架
 
-[x] server render 使用 memfs 读写
-[x] 面向对象 Server
-[ ] ts
-[ ] redux
+支持：
+
+- [x] 同构渲染
+- [ ] 数据预加载
+- [x] 热更新
+- [ ] 注水和脱水
+- [ ] 多入口
+- [ ] 文件路由
+- [ ] 支持自定义路由
+- [ ] 自定义 Server
