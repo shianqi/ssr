@@ -1,9 +1,8 @@
-import webpack, { MultiCompiler, Compiler, Configuration } from 'webpack'
+import webpack, { MultiCompiler, Compiler } from 'webpack'
 import hotMiddleware from 'webpack-hot-middleware'
 import devMiddleware from 'webpack-dev-middleware'
 
-import webpackClientConfig from '../config/webpack.config.client'
-import webpackServerConfig from '../config/webpack.config.server'
+import webpackConfig from '../config/webpack.config'
 import { renderMiddleware } from './render'
 
 function deleteCache(path: string) {
@@ -17,10 +16,7 @@ export default class HotReloader {
   serverCompiler: Compiler
 
   constructor() {
-    const compiler = webpack([
-      webpackClientConfig as Configuration,
-      webpackServerConfig as Configuration,
-    ])
+    const compiler = webpack(webpackConfig)
     const [clientCompiler, serverCompiler] = compiler.compilers
 
     this.prevAssets = null
@@ -62,6 +58,7 @@ export default class HotReloader {
   getDevMiddleware() {
     return devMiddleware(this.compiler, {
       serverSideRender: true,
+      writeToDisk: true,
     })
   }
 

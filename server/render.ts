@@ -1,31 +1,10 @@
+import React from 'react'
 import path from 'path'
 import { Request, Response } from 'express'
 import { compilation } from 'webpack'
 import { renderToString } from 'react-dom/server'
 import { ChunkExtractor } from '@loadable/server'
 import requireFromString from 'require-from-string'
-
-function htmlTemplate(options: {
-  html: string
-  scriptTags: string
-  // styleTags: string
-  linkTags: string
-}) {
-  const { html, scriptTags, linkTags } = options
-
-  return `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        ${linkTags}
-      </head>
-      <body>
-        <div id="app">${html}</div>
-        ${scriptTags}
-      </body>
-    </html>
-  `
-}
 
 function getSsrOptions(locals: Record<string, any>) {
   const { webpackStats, fs } = locals
@@ -35,10 +14,10 @@ function getSsrOptions(locals: Record<string, any>) {
   const { assetsByChunkName, outputPath = '' } = serverJsonWebpackStats
 
   if (assetsByChunkName) {
-    const { server } = assetsByChunkName
+    const { main } = assetsByChunkName
     const serverPath = path.join(
       outputPath,
-      Array.isArray(server) ? server[0] : server
+      Array.isArray(main) ? main[0] : main
     )
 
     const row = fs.readFileSync(serverPath).toString()
@@ -47,32 +26,41 @@ function getSsrOptions(locals: Record<string, any>) {
   return null
 }
 
+const nodeStats = path.resolve(__dirname, '../dist/loadable-stats-node.json')
+const webStats = path.resolve(__dirname, '../dist/loadable-stats-web.json')
+
 export const renderMiddleware = async (req: Request, res: Response) => {
-  // const scripts = getScripts(res.locals)
   const ssrOptions = getSsrOptions(res.locals)
 
   if (ssrOptions) {
-    const { Application } = await ssrOptions(req)
-    const statsFile = path.resolve(__dirname, '../dist/loadable-stats.json')
+    // const { Application } = ssrOptions(req)
+    // const webExtractor = new ChunkExtractor({ statsFile: webStats })
+    // console.log(Application)
+    // const jsx = webExtractor.collectChunks(React.createElement(Application))
+    // const html = renderToString(jsx)
 
-    const extractor = new ChunkExtractor({ statsFile, entrypoints: ['app'] })
-    const jsx = extractor.collectChunks(Application)
+    const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats })
+    const { default: getApp } = nodeExtractor.requireEntrypoint() as any
+    const { Application } = getApp(req)
+
+    const webExtractor = new ChunkExtractor({ statsFile: webStats })
+    const jsx = webExtractor.collectChunks(React.createElement(Application))
+
     const html = renderToString(jsx)
 
-    const scriptTags = extractor.getScriptTags()
-    const linkTags = extractor.getLinkTags()
-    // const styleTags = extractor.getStyleTags()
-
-    res.writeHead(200, { 'Content-Type': 'text/html' })
-    res.end(
-      htmlTemplate({
-        html,
-        scriptTags,
-        linkTags,
-        // styleTags,
-      })
-    )
+    res.set('content-type', 'text/html')
+    res.send(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+        ${webExtractor.getLinkTags()}
+        ${webExtractor.getStyleTags()}
+        </head>
+        <body>
+          <div id="app">${html}</div>
+          ${webExtractor.getScriptTags()}
+        </body>
+      </html>
+    `)
   }
-
-  res.end('error')
 }
