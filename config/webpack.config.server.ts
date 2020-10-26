@@ -40,6 +40,7 @@ const config: Configuration = {
       __isBrowser__: false,
     }),
   ],
+  externals: ['react', 'react-dom'],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
