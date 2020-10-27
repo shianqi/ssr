@@ -3,8 +3,9 @@
     "target": "es2018",
     "module": "commonjs",
     "moduleResolution": "node",
-    "jsx": "preserve",
-    "lib": ["esnext", "esnext.asynciterable", "dom"],
+    "jsx": "react",
+    "lib": [
+      "esnext", "esnext.asynciterable", "dom"],
     "esModuleInterop": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,

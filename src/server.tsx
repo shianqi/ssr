@@ -6,8 +6,11 @@ import { StaticRouter } from 'react-router-dom'
 import App from './App'
 import { getStore } from '~/redux'
 
-function serverRender(req: any, routerContext: StaticRouterContext = {}) {
-  const preloadedState = req.state || {}
+function serverRender(
+  req: any,
+  preloadedState: any = {},
+  routerContext: StaticRouterContext = {}
+) {
   const store = getStore(preloadedState)
 
   const Application = () => (

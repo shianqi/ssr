@@ -7,7 +7,14 @@ let REDUX_STORE: Store | null = null
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const getStore = (preloadedState?: {}) => {
   if (!REDUX_STORE) {
-    const initialState = {}
+    let initialState = {}
+
+    if (typeof window === 'object') {
+      const dom = document.getElementById('__REDUX_INITIAL_STATE__')
+      if (dom) {
+        initialState = JSON.parse(dom.innerText)
+      }
+    }
 
     REDUX_STORE = createStore(
       rootReducer,
