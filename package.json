@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf ./dist",
-    "dev": "npm run clean && NODE_ENV=development BABEL_ENV=development ts-node server/index.ts"
+    "dev": "npm run clean && NODE_ENV=development BABEL_ENV=development ts-node-dev server/index.ts"
   },
   "repository": {
     "type": "git",
