@@ -1,6 +1,6 @@
 import { RouteProps } from 'react-router'
-// import { matchPath } from 'react-router-dom'
 import loadable from '@loadable/component'
+
 import withRoot, { RootConfigProps } from './containers/withRoot'
 
 const Home = loadable(

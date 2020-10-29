@@ -7,7 +7,7 @@ import App from './App'
 import { getStore } from '~/redux'
 
 function serverRender(
-  req: any,
+  path: string,
   preloadedState: any = {},
   routerContext: StaticRouterContext = {}
 ) {
@@ -16,7 +16,7 @@ function serverRender(
   const Application = () => (
     <StrictMode>
       <Provider store={store}>
-        <StaticRouter location={req.path} context={routerContext}>
+        <StaticRouter location={path} context={routerContext}>
           <App />
         </StaticRouter>
       </Provider>
@@ -24,7 +24,7 @@ function serverRender(
   )
 
   return {
-    // store,
+    store,
     Application,
     routerContext,
   }

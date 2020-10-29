@@ -7,6 +7,8 @@ import { ChunkExtractor } from '@loadable/server'
 import requireFromString from 'require-from-string'
 import { matchPath } from 'react-router'
 import serialize from 'serialize-javascript'
+
+import { ServerRender } from '~/typings/app'
 import routes from '../src/routes'
 
 function getSsrOptions(locals: Record<string, any>) {
@@ -58,11 +60,17 @@ export const renderMiddleware = (req: Request, res: Response) => {
       // const jsx = webExtractor.collectChunks(React.createElement(Application))
       // const html = renderToString(jsx)
 
-      const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats })
-      const { default: getApp } = nodeExtractor.requireEntrypoint() as any
-      const { Application } = getApp(req, state)
+      const nodeExtractor = new ChunkExtractor({
+        statsFile: nodeStats,
+        inputFileSystem: res.locals.fs,
+      })
+      const { default: serverRender } = nodeExtractor.requireEntrypoint() as any
+      const { Application } = (serverRender as ServerRender)(req.path, state)
 
-      const webExtractor = new ChunkExtractor({ statsFile: webStats })
+      const webExtractor = new ChunkExtractor({
+        statsFile: webStats,
+        inputFileSystem: res.locals.fs,
+      })
       const jsx = webExtractor.collectChunks(React.createElement(Application))
 
       const html = renderToString(jsx)

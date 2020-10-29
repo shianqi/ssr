@@ -37,7 +37,6 @@ const getConfig: (target: 'web' | 'node') => Configuration = (target) => ({
       __isBrowser__: target === 'web',
     }),
     new LoadablePlugin({
-      writeToDisk: true,
       filename: `loadable-stats-${target}.json`,
     }),
     ...(target === 'web'

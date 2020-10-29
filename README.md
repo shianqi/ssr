@@ -38,3 +38,8 @@ npm run dev
 ### 自定义 Server
 
 webpack-dev-middleware
+
+### TODO
+
+- memory-fs loadable-component
+- redux & typescript
