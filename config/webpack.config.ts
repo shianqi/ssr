@@ -1,11 +1,12 @@
 import path from 'path'
 import webpack, { Configuration } from 'webpack'
 import LoadablePlugin from '@loadable/webpack-plugin'
+import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 
 const getConfig: (target: 'web' | 'node') => Configuration = (target) => ({
   name: target,
   mode: 'development',
-  devtool: 'eval-source-map',
+  devtool: 'cheap-module-source-map',
   target,
   entry:
     target === 'web'
@@ -39,7 +40,9 @@ const getConfig: (target: 'web' | 'node') => Configuration = (target) => ({
       writeToDisk: true,
       filename: `loadable-stats-${target}.json`,
     }),
-    ...(target === 'web' ? [new webpack.HotModuleReplacementPlugin()] : []),
+    ...(target === 'web'
+      ? [new ErrorOverlayPlugin(), new webpack.HotModuleReplacementPlugin()]
+      : []),
   ],
   optimization: {
     usedExports: true,

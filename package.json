@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf ./dist",
-    "dev": "npm run clean && NODE_ENV=development BABEL_ENV=development ts-node-dev server/index.ts"
+    "dev": "npm run clean && NODE_ENV=development BABEL_ENV=development ts-node-dev --files server/index.ts"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,7 @@
     "@types/react-router-dom": "^5.1.6",
     "@types/redux-thunk": "^2.1.0",
     "@types/require-from-string": "^1.2.0",
+    "@types/serialize-javascript": "^4.0.0",
     "@types/webpack-dev-middleware": "^3.7.2",
     "@types/webpack-hot-middleware": "^2.25.3",
     "@types/webpack-node-externals": "^2.5.0",
@@ -41,6 +42,7 @@
     "@typescript-eslint/parser": "^4.5.0",
     "babel-loader": "^8.1.0",
     "babel-preset-react-app": "^10.0.0",
+    "error-overlay-webpack-plugin": "^0.4.1",
     "eslint": "^7.12.0",
     "eslint-config-prettier": "^6.14.0",
     "eslint-config-standard": "^15.0.0",
@@ -78,6 +80,7 @@
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "require-from-string": "^2.0.2"
+    "require-from-string": "^2.0.2",
+    "serialize-javascript": "^5.0.1"
   }
 }

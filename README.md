@@ -24,3 +24,17 @@ npm install
 npm run dev
 ```
 
+### 技术栈
+
+- TypeScript
+- React
+- webpack
+- redux
+- react-router
+- loadable-component
+
+### 代码结构
+
+### 自定义 Server
+
+webpack-dev-middleware

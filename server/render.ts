@@ -6,6 +6,7 @@ import { renderToString } from 'react-dom/server'
 import { ChunkExtractor } from '@loadable/server'
 import requireFromString from 'require-from-string'
 import { matchPath } from 'react-router'
+import serialize from 'serialize-javascript'
 import routes from '../src/routes'
 
 function getSsrOptions(locals: Record<string, any>) {
@@ -75,8 +76,9 @@ export const renderMiddleware = (req: Request, res: Response) => {
         ${webExtractor.getStyleTags()}
         </head>
         <body>
-          <textarea id="__REDUX_INITIAL_STATE__" style="display: none;">${JSON.stringify(
-            state
+          <textarea id="__REDUX_INITIAL_STATE__" style="display: none;">${serialize(
+            state,
+            { isJSON: true }
           )}</textarea>
           <div id="app">${html}</div>
           ${webExtractor.getScriptTags()}
