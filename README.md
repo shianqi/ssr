@@ -42,4 +42,3 @@ webpack-dev-middleware
 ### TODO
 
 - memory-fs loadable-component
-- redux & typescript

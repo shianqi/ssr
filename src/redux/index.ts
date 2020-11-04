@@ -7,8 +7,7 @@ let REDUX_STORE: Store
 
 export const enhancer = applyMiddleware(thunk)
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const getStore = (preloadedState?: {}) => {
+export const getStore = (preloadedState?: Record<string, unknown>) => {
   if (!REDUX_STORE) {
     let initialState = {}
 

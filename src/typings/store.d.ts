@@ -9,7 +9,7 @@ type UnStoreEnhancer<Enhancer> = Enhancer extends StoreEnhancer<infer V>
   ? V
   : never
 type UnStoreEnhancerState<Enhancer> = Enhancer extends StoreEnhancer<
-  any,
+  unknown,
   infer V
 >
   ? V
