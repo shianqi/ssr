@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 const App = () => {
-  const mode = useSelector((state: any) => state.app.mode)
+  const mode = useSelector((state) => state.app.mode)
 
   return <h1>Home, {mode}</h1>
 }

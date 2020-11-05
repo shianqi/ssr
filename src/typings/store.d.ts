@@ -29,3 +29,7 @@ declare module 'typesafe-actions' {
     RootAction: RootAction
   }
 }
+
+declare module 'react-redux' {
+  interface DefaultRootState extends ReduxRootState {}
+}
