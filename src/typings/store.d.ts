@@ -1,4 +1,4 @@
-import { Store as ReduxStore } from 'redux'
+import { Store as ReduxStore, StoreEnhancer } from 'redux'
 import {
   RootState as ReduxRootState,
   RootAction as ReduxRootAction,
@@ -22,7 +22,6 @@ declare module 'typesafe-actions' {
     EnhancerExt
 
   export type RootState = ReduxRootState
-
   export type RootAction = ReduxRootAction
 
   interface Types {
