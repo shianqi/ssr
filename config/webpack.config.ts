@@ -1,7 +1,11 @@
+import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 import path from 'path'
 import webpack, { Configuration } from 'webpack'
+
 import LoadablePlugin from '@loadable/webpack-plugin'
-import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
+import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin'
+
+const isDev = process.env.NODE_ENV !== 'production'
 
 const getConfig: (target: 'web' | 'node') => Configuration = (target) => ({
   name: target,
@@ -10,10 +14,7 @@ const getConfig: (target: 'web' | 'node') => Configuration = (target) => ({
   target,
   entry:
     target === 'web'
-      ? [
-          'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
-          './src/client.tsx',
-        ]
+      ? ['webpack-hot-middleware/client', './src/client.tsx']
       : ['./src/server.tsx'],
   module: {
     rules: [
@@ -23,6 +24,9 @@ const getConfig: (target: 'web' | 'node') => Configuration = (target) => ({
         loader: 'babel-loader',
         options: {
           caller: { target },
+          plugins: [
+            target === 'web' && require.resolve('react-refresh/babel'),
+          ].filter(Boolean),
         },
       },
     ],
@@ -40,7 +44,16 @@ const getConfig: (target: 'web' | 'node') => Configuration = (target) => ({
       filename: `loadable-stats-${target}.json`,
     }),
     ...(target === 'web'
-      ? [new ErrorOverlayPlugin(), new webpack.HotModuleReplacementPlugin()]
+      ? [
+          new ErrorOverlayPlugin(),
+          isDev && new webpack.HotModuleReplacementPlugin(),
+          isDev &&
+            new ReactRefreshPlugin({
+              overlay: {
+                sockIntegration: 'whm',
+              },
+            }),
+        ]
       : []),
   ],
   optimization: {
