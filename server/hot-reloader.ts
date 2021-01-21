@@ -63,6 +63,6 @@ export default class HotReloader {
   }
 
   getMiddlewares() {
-    return [this.getHotMiddleware(), this.getDevMiddleware(), renderMiddleware]
+    return [this.getDevMiddleware(), this.getHotMiddleware(), renderMiddleware]
   }
 }

@@ -1,13 +1,13 @@
-import express, { Express } from 'express'
+import Koa from 'koa'
 
 import HotReloader from './hot-reloader'
 
 export default class Server {
-  app: Express
+  app: Koa
   hotReloader: HotReloader
 
   constructor() {
-    this.app = express()
+    this.app = new Koa()
     this.hotReloader = this.getHotReloader()
   }
 
@@ -15,14 +15,26 @@ export default class Server {
     return new HotReloader()
   }
 
-  prepare() {
+  async prepare() {
     const middlewares = this.hotReloader.getMiddlewares()
-    this.app.use(middlewares)
+
+    this.app.use(async (ctx) => {
+      ctx.res.statusCode = 200
+
+      for (const fn of middlewares) {
+        await new Promise((resolve, reject) => {
+          fn(ctx.req, ctx.res, (err: Error) => {
+            if (err) return reject(err)
+            resolve(null)
+          })
+        })
+      }
+    })
   }
 
-  start() {
+  async start() {
     this.hotReloader.start()
-    this.prepare()
+    await this.prepare()
     this.app.listen(3000)
   }
 }
