@@ -16,12 +16,12 @@ export default class Server {
   }
 
   async prepare() {
-    const middlewares = this.hotReloader.getMiddlewares()
+    const middleware = this.hotReloader.getMiddleware()
 
     this.app.use(async (ctx) => {
       ctx.res.statusCode = 200
 
-      for (const fn of middlewares) {
+      for (const fn of middleware) {
         await new Promise((resolve, reject) => {
           fn(ctx.req, ctx.res, (err: Error) => {
             if (err) return reject(err)

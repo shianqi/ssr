@@ -1,6 +1,6 @@
-import webpack, { MultiCompiler, Compiler } from 'webpack'
-import hotMiddleware from 'webpack-hot-middleware'
+import webpack, { Compiler, MultiCompiler } from 'webpack'
 import devMiddleware from 'webpack-dev-middleware'
+import hotMiddleware from 'webpack-hot-middleware'
 
 import webpackConfig from '../config/webpack.config'
 import { renderMiddleware } from './render'
@@ -62,7 +62,7 @@ export default class HotReloader {
     })
   }
 
-  getMiddlewares() {
+  getMiddleware() {
     return [this.getDevMiddleware(), this.getHotMiddleware(), renderMiddleware]
   }
 }
